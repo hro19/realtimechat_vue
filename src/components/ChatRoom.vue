@@ -71,7 +71,7 @@ export default defineComponent({
     },
     fetchMessages() {
       axios
-        .get(`http://localhost:3000/rooms/${this.roomId}/messages`)
+        .get(`${import.meta.env.VITE_API_URL}/rooms/${this.roomId}/messages`)
         .then((response) => {
           this.messages = response.data;
         })
@@ -81,7 +81,7 @@ export default defineComponent({
       },
     sendMessage() {
       axios
-        .post(`http://localhost:3000/rooms/${this.roomId}/messages`, {
+        .post(`${import.meta.env.VITE_API_URL}/rooms/${this.roomId}/messages`, {
           content: this.newMessageContent,
           sender_name: this.senderName
         })
