@@ -32,6 +32,7 @@
 <script lang="ts">
 import axios from "axios";
 import { defineComponent } from "vue";
+import { inject } from 'vue';
 
 type Message = {
   id: number;
@@ -48,11 +49,26 @@ export default defineComponent({
       senderName: "" as string,
       newMessageContent: "" as string,
     };
+    },
+  setup() {
+    const cable = inject('cable');
+    return { cable };
   },
   created() {
-    this.fetchMessages();
+      this.fetchMessages();
+    this.createSubscription();
   },
-  methods: {
+    methods: {
+    createSubscription() {
+    this.subscription = (this.cable as any).subscriptions.create(
+        { channel: 'RoomChannel', room_id: this.roomId },
+        {
+        received: (message: Message) => {
+            this.messages.push(message);
+          },
+        }
+      );
+    },
     fetchMessages() {
       axios
         .get(`http://localhost:3000/rooms/${this.roomId}/messages`)
