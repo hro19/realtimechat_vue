@@ -18,6 +18,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import axios from 'axios';
+import { add } from '../api/roomsAll';
 
 type ChatRoom = {
   id: number;
@@ -36,6 +37,8 @@ export default defineComponent({
   },
   created() {
     this.fetchChatRooms();
+      const result = add(10, 35);
+      console.log(result);
   },
   methods: {
     fetchChatRooms() {
@@ -62,4 +65,4 @@ export default defineComponent({
     },
   },
 });
-</script>
+</script>../api/roomsAll
