@@ -1,7 +1,8 @@
 <template>
   <div>
-    <h1>チャットルーム {{ roomId }}</h1>
-
+    <header>
+      <h1 class="text-3xl text-purple-400">【{{ roomId }}】{{ roomName }}</h1>
+    </header>
     <ul>
       <li v-for="message in messages" :key="message.id">
         <strong>{{ message.sender_name }}:</strong> {{ message.content }}
@@ -48,6 +49,7 @@ export default defineComponent({
       messages: [] as Message[],
       senderName: "" as string,
       newMessageContent: "" as string,
+      subscription: null as any,
     };
     },
   setup() {
@@ -60,11 +62,11 @@ export default defineComponent({
   },
     methods: {
     createSubscription() {
-    this.subscription = (this.cable as any).subscriptions.create(
-        { channel: 'RoomChannel', room_id: this.roomId },
-        {
-        received: (message: Message) => {
-            this.messages.push(message);
+      this.subscription = (this.cable as any).subscriptions.create(
+          { channel: 'RoomChannel', room_id: this.roomId },
+          {
+          received: (message: Message) => {
+              this.messages.push(message);
           },
         }
       );
@@ -73,7 +75,8 @@ export default defineComponent({
       axios
         .get(`${import.meta.env.VITE_API_URL}/rooms/${this.roomId}/messages`)
         .then((response) => {
-          this.messages = response.data;
+          this.messages = response.data.messages;
+          this.roomName = response.data.room.name;
         })
         .catch((error) => {
           console.error(error);
