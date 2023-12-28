@@ -18,7 +18,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import axios from 'axios';
-import { fetchChatRooms } from '../api/roomsAll';
+import { getAllRooms } from '../api/roomService';
 
 type ChatRoom = {
   id: number;
@@ -40,13 +40,9 @@ export default defineComponent({
   },
   methods: {
     fetchChatRooms() {
-       fetchChatRooms()
-        .then(response => {
-          this.chatRooms = response;
-        })
-        .catch(error => {
-          console.error(error);
-        });
+      (async () => {
+        this.chatRooms = await getAllRooms();
+      })();
     },
     createRoom() {
       axios.post(`${import.meta.env.VITE_API_URL}/rooms`, {
@@ -62,4 +58,4 @@ export default defineComponent({
     },
   },
 });
-</script>../api/roomsAll
+</script>../api/roomsAll../api/roomService
