@@ -6,7 +6,7 @@
         <router-link :to="`/rooms/${room.id}`">{{ room.name }}</router-link>
       </li>
     </ul>
-    <hr />
+    <hr class="my-3" />
     <h3 class=" text-blue-500">チャットルーム作成</h3>
     <div class="flex">
       <input type="text" v-model="newRoomName" class="border border-gray-300 rounded-l px-2" />
