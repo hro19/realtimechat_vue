@@ -1,7 +1,7 @@
 <template>
   <div>
     <header>
-      <h1 class="text-3xl text-purple-400">【{{ roomId }}】{{ roomName }}</h1>
+      <h1 class="text-3xl text-purple-400 mb-2">【{{ roomId }}】{{ roomName }}</h1>
     </header>
     <ul>
       <li v-for="message in messages" :key="message.id">
