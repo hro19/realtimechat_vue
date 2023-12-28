@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="text-pink-500 text-2xl">VueChat - チャットルーム一覧</h1>
+    <h1 class="text-pink-500 text-2xl mb-2">VueChat - チャットルーム一覧</h1>
     <ul>
       <li v-for="room in chatRooms" :key="room.id" class="underline">
         <router-link :to="`/rooms/${room.id}`">{{ room.name }}</router-link>
