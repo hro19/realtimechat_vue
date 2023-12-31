@@ -15,38 +15,30 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-import { getAllRooms,createChatRoom } from '../api/roomService';
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import { getAllRooms, createChatRoom } from '../api/roomService'
 
 type ChatRoom = {
-  id: number;
-  name: string;
+  id: number
+  name: string
 }
 
-export default defineComponent({
-  data() {
-    return {
-      chatRooms: [] as ChatRoom[],
-      newRoomName: '' as string,
-    };
-  },
-  mounted() {
-    this.fetchChatRooms();
-  },
-  created() {
-    this.fetchChatRooms();
-  },
-  methods: {
-    async fetchChatRooms() {
-        this.chatRooms = await getAllRooms();
-    },
-    async createRoom() {
-          const newRoom = await createChatRoom(this.newRoomName)
-          this.chatRooms.push(newRoom);
-          this.newRoomName = '';
-        }
-    },
-  },
-);
+const chatRooms = ref<ChatRoom[]>([])
+const newRoomName = ref<string>('')
+
+onMounted(async () => {
+  await fetchChatRooms()  
+})
+
+const fetchChatRooms = async () => {
+  chatRooms.value = await getAllRooms()
+}
+
+const createRoom = async () => {
+  const newRoom = await createChatRoom(newRoomName.value) 
+  chatRooms.value.push(newRoom)
+  newRoomName.value = ''
+}
+
 </script>

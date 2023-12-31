@@ -8,7 +8,7 @@ const routes = [
   {
     path: "/rooms/:id",
     component: ChatRoom,
-    props: (route:any) => ({ roomId: route.params.id }),
+    props: (route: any) => ({ roomId: Number(route.params.id) }),
   },
 ];
 

@@ -30,71 +30,65 @@
   </div>
 </template>
 
-<script lang="ts">
-import axios from "axios";
-import { defineComponent } from "vue";
-import { inject } from 'vue';
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import { inject } from 'vue'  
+import axios from 'axios'
 
-type Message = {
-  id: number;
-  sender_name: string;
-  content: string;
-};
+// propsの定義
+const props = defineProps<{
+  roomId: number
+}>()
 
-export default defineComponent({
-  props: ["roomId"],
-  data() {
-    return {
-      roomName: "" as string,
-      messages: [] as Message[],
-      senderName: "" as string,
-      newMessageContent: "" as string,
-      subscription: null as any,
-    };
-    },
-  setup() {
-    const cable = inject('cable');
-    return { cable };
-  },
-  created() {
-      this.fetchMessages();
-    this.createSubscription();
-  },
-    methods: {
-    createSubscription() {
-      this.subscription = (this.cable as any).subscriptions.create(
-          { channel: 'RoomChannel', room_id: this.roomId },
-          {
-          received: (message: Message) => {
-              this.messages.push(message);
-          },
-        }
-      );
-    },
-    fetchMessages() {
-      axios
-        .get(`${import.meta.env.VITE_API_URL}/rooms/${this.roomId}/messages`)
-        .then((response) => {
-          this.messages = response.data.messages;
-          this.roomName = response.data.room.name;
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-      },
-    sendMessage() {
-      axios
-        .post(`${import.meta.env.VITE_API_URL}/rooms/${this.roomId}/messages`, {
-          content: this.newMessageContent,
-          sender_name: this.senderName
-        })
-        .then(() => {
-          this.newMessageContent = ''
-        })
-        .catch((error) => {
-          console.error(error)
-        })
-    }
-  },
-});
+// 状態の定義
+const messages = ref<any>([])
+const roomName = ref<string>('')  
+const senderName = ref<string>('')
+const newMessageContent = ref<string>('')
+
+// Action Cableのinject
+const cable:any = inject('cable')  
+
+// ライフサイクルフックで初期化
+onMounted(() => {
+  fetchMessages()
+  createSubscription() 
+})
+
+// Action Cableでの購読設定
+const createSubscription = () => {
+
+  cable.subscriptions.create({
+    channel: 'RoomChannel',
+    room_id: props.roomId
+  }, {
+    received: (message: any) => {
+      messages.value.push(message) 
+    } 
+  })
+
+}
+
+// メッセージの取得
+const fetchMessages = async () => {
+
+  const response = await axios.get(`${import.meta.env.VITE_API_URL}/rooms/${props.roomId}/messages`) 
+  
+  messages.value = response.data.messages 
+  roomName.value = response.data.room.name
+
+}  
+
+// メッセージの送信 
+const sendMessage = async () => {
+
+  await axios.post(`${import.meta.env.VITE_API_URL}/rooms/${props.roomId}/messages`, {
+    content: newMessageContent.value,
+    sender_name: senderName.value 
+  })
+  
+  newMessageContent.value = ''
+
+}
+
 </script>
