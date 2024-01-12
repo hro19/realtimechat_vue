@@ -1,8 +1,8 @@
-import axios from "axios";
+import axiosCommon from '../api/axiosCommon';
 
 export async function getAllRooms() {
   try {
-    const response = await axios.get(`${import.meta.env.VITE_API_URL}/rooms`);
+    const response = await axiosCommon.get(`${import.meta.env.VITE_API_URL}/rooms`);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -11,7 +11,7 @@ export async function getAllRooms() {
 }
 
 export function createChatRoom(name:string) {
-  return axios
+  return axiosCommon
     .post(`${import.meta.env.VITE_API_URL}/rooms`, { name })
     .then((res) => {
       return res.data;

@@ -33,7 +33,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { inject } from 'vue'  
-import axios from 'axios'
+import axiosCommon from '../api/axiosCommon';
 
 // propsの定義
 const props = defineProps<{
@@ -72,7 +72,7 @@ const createSubscription = () => {
 // メッセージの取得
 const fetchMessages = async () => {
 
-  const response = await axios.get(`${import.meta.env.VITE_API_URL}/rooms/${props.roomId}/messages`) 
+  const response = await axiosCommon.get(`${import.meta.env.VITE_API_URL}/rooms/${props.roomId}/messages`) 
   
   messages.value = response.data.messages 
   roomName.value = response.data.room.name
@@ -82,7 +82,7 @@ const fetchMessages = async () => {
 // メッセージの送信 
 const sendMessage = async () => {
 
-  await axios.post(`${import.meta.env.VITE_API_URL}/rooms/${props.roomId}/messages`, {
+  await axiosCommon.post(`${import.meta.env.VITE_API_URL}/rooms/${props.roomId}/messages`, {
     content: newMessageContent.value,
     sender_name: senderName.value 
   })

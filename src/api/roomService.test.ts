@@ -2,12 +2,12 @@
 
 import { describe, it, expect,vi } from "vitest";
 import { getAllRooms, createChatRoom } from "./roomService";
-import axios from "axios";
+import axiosCommon from "../api/axiosCommon";
 
 describe("getAllRooms", () => {
   it("should return rooms array", async () => {
     const mockRooms = [{ id: 1 }, { id: 2 }];
-    vi.spyOn(axios, "get").mockResolvedValue({ data: mockRooms });
+    vi.spyOn(axiosCommon, "get").mockResolvedValue({ data: mockRooms });
 
     const rooms = await getAllRooms();
     expect(rooms).toEqual(mockRooms);
@@ -17,7 +17,7 @@ describe("getAllRooms", () => {
 describe("createChatRoom", () => {
   it("should create and return a room", async () => {
     const newRoom = { id: 1, name: "room1" };
-    vi.spyOn(axios, "post").mockResolvedValue({ data: newRoom });
+    vi.spyOn(axiosCommon, "post").mockResolvedValue({ data: newRoom });
 
     const room = await createChatRoom("room1");
     expect(room).toEqual(newRoom);
